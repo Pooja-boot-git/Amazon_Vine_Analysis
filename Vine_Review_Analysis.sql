@@ -8,7 +8,6 @@ CREATE TABLE vine_table (
   verified_purchase TEXT
 );
 
-
 -- select all vine reviews in one table
 select star_rating,helpful_votes,total_votes,vine into vine_reviews 
 	from vine_table 
@@ -24,7 +23,7 @@ select star_rating,helpful_votes,total_votes,vine into non_vine_reviews
 	and (cast(helpful_votes as float)/cast(total_votes as float) >=0.5);
 
 --total paid reviews 
-select * from vine_reviews; --266  
+select count(*) from vine_reviews; --266  
 --total non-paid reviews
 select count(*) from non_vine_reviews; --38829  
 
@@ -47,6 +46,23 @@ FROM
 (SELECT count(*) as star_5_count from non_vine_reviews where star_rating =5 ) as c
 ,(select count(*) as total_reviews from non_vine_reviews) as b
 
+-- DELIVERABLE 3 additional analysis
+-- percentage of 3 and above reviews for paid users 
+
+select goodstars,total_reviews,
+(cast(goodstars as float)/cast (total_reviews as float)) * 100 as percentage
+FROM 
+(SELECT count(*) as goodstars from vine_reviews where star_rating >=3 ) as c
+,(select count(*) as total_reviews from vine_reviews) as b
+
+-- percentage of 3 and above reviews for non-paid users 
+select goodstars,total_reviews,
+(cast(goodstars as float)/cast (total_reviews as float)) * 100 as percentage
+FROM 
+(SELECT count(*) as goodstars from non_vine_reviews where star_rating >=3 ) as c
+,(select count(*) as total_reviews from non_vine_reviews) as b
+
+-- drop these tables once they have been used.
 --drop table vine_reviews
 --drop table non_vine_reviews
 
